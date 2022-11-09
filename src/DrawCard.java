@@ -1,42 +1,38 @@
-import java.util.Scanner;
+import java.io.File;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 class DrawCard{
     Card[] hand;
 
     public DrawCard(){
-  
+        
 
         
     }
-    public String DrawAmount(int amount){
-        Scanner input = new Scanner(System.in);
-        String output = "";
-        //Hand handCards = new Hand(); -- not using this file till I figure out why its being a bitch
-        String yn;
-        hand = new Card[amount];
-
-        for(int i = 0; i < amount; i++){
-            hand[i] = new Card((int)(Math.random()*52));
-        }
-        System.out.println("Do you want to display your hand? (y, n)");
-        yn = input.nextLine();
+    public String Draw(int cardIndex) throws Exception{
+        String FILENAME = "Card_File.xml";
         
-            
-        
-        for(int i = 0; i < amount; i++){
+        DocumentBuilderFactory docB = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = docB.newDocumentBuilder();
+        Document doc = db.parse(new File(FILENAME));
 
-            try{
-            output += hand[i].Face() + " of " + hand[i].Suit();
-            }catch(Exception e){
-                System.out.println("YUP ITS STILL SHIT");
-                e.printStackTrace();
-            }
-            output += "\n";
-            }
-            if(yn.charAt(0) == 'y'){
-        return output;
-        } else{
-            return "";
-        }
-         //return handCards.ShowHand(amount);
+        NodeList card = doc.getElementsByTagName("Card" + cardIndex);
+
+        Node node = card.item(0);
+                    Element element = (Element) node;
+
+
+                    //**This is the most important part as this is how we are assigning variables values from the file**
+                    String Face = element.getElementsByTagName("Face").item(0).getTextContent();
+                    String Suit = element.getElementsByTagName("Suit").item(0).getTextContent();
+                
+
+        return Face + " of " + Suit;
     }
 }
