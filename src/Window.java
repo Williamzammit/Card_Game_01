@@ -1,3 +1,7 @@
+//William Zammit
+//November 15th
+//Deck of Cards assignment
+
 import javax.swing.JFrame;
 import java.awt.event.*;
 import javax.swing.JLabel;
@@ -8,7 +12,7 @@ import java.awt.Font;
 public class Window{
 
 
-public static void test() {
+public void test() {
     
         JFrame test = new JFrame();
         JPanel testPanel = new JPanel();

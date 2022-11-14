@@ -1,3 +1,7 @@
+//William Zammit
+//November 15th
+//Deck of Cards assignment
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,10 +20,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-//Nov 10th: Code is being a bitch
-//Nov 13th: Right now best option is probably to delete the file in full and rewrite it every time an edit is made to the xml file
-//          Will talk with mct on Monday though
 import java.util.Scanner;
+
+/*Nov 10th: Code is being a bitch
+//Nov 12th: Right now best option is probably to delete the file in full and rewrite it every time an edit is made to the xml file
+            Will talk with mct on Monday though
+//Nov 13th: I have decided to use the method on deleting the file and it seems to work nicely even if there is a better way to do it
+            Next steps are to draw multiple cards, include an option asking the user to save their hand at the end of the program(deleting the file)
+            and an option at the beginning asking if the user would like to load the most recent hand (i.e. not re-writing a new file)
+*/
+
 class Main {
     
     public static void main(String[] args) throws Exception {
@@ -28,8 +38,11 @@ class Main {
         
 
         //Boring xml stuff
-       String FILENAME = "Card_File.xml";
-       String root = "Cards";
+
+        //When changing the FILENAME variable you must also change the matching variable in DrawCard.java
+        String FILENAME = "Card_File.xml";
+        String root = "Cards";
+
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
@@ -140,8 +153,6 @@ class Main {
         
 
 
-            
-        
             //Code to access the xml file to take a value from the Deck node and copy it into our hand node.
             DocumentBuilderFactory docB = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = docB.newDocumentBuilder();

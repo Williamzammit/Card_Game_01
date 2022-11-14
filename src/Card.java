@@ -1,3 +1,7 @@
+//William Zammit
+//November 15th
+//Deck of Cards assignment
+
 class Card{
     enum Suit{CLUBS, DIAMONDS, HEARTS, SPADES}
     enum Face{ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING}

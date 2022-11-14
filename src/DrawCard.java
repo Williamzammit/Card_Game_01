@@ -1,3 +1,7 @@
+//William Zammit
+//November 15th
+//Deck of Cards assignment
+
 import java.io.File;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,6 +21,9 @@ class DrawCard{
 
         
     }
+
+    //This method gets the value of the card draw from the shuffled deck
+    //It uses the data from the xml file to get the card ID and returns a String with the card
     public String Draw(int cardIndex, Element handElement) throws Exception{
         String FILENAME = "Card_File.xml";
         
@@ -36,7 +43,7 @@ class DrawCard{
 
                     
                 
-
+        
         return Face + " of " + Suit;
     }
 }

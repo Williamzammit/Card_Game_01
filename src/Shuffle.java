@@ -1,3 +1,7 @@
+//William Zammit
+//November 15th
+//Deck of Cards assignment
+
 public class Shuffle {
     public int[] ShuffleCards(int[] cards){
 
