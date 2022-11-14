@@ -210,5 +210,10 @@
                <Face>KING</Face>
           </Card51>
      </Deck>
-     <Hand/>
+     <Hand>
+          <Card1>
+               <Suit>CLUBS</Suit>
+               <Face>ACE</Face>
+          </Card1>
+     </Hand>
 </Cards>
