@@ -10,21 +10,34 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.parsers.DocumentBuilder;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+//Nov 10th: Code is being a bitch
+//Nov 11th:
 import java.util.Scanner;
 class Main {
     
     public static void main(String[] args) throws Exception {
+        Window test = new Window();
+        test.test();
+        
 
-        //Boring xml stuffp
+        //Boring xml stuff
        String FILENAME = "Card_File.xml";
        String root = "Cards";
-       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
         Element rootElement = document.createElement(root);
         document.appendChild(rootElement);
+
+        Element deckElement = document.createElement("Deck");
+        rootElement.appendChild(deckElement);
+
+        Element handElement = document.createElement("Hand");
+        rootElement.appendChild(handElement);
 
         for(int i = 0; i <= 51; i++){
             Card card = new Card(i);
@@ -38,7 +51,7 @@ class Main {
             face.appendChild(document.createTextNode(card.Face()));
             cardElement.appendChild(face);
 
-            rootElement.appendChild(cardElement);
+            deckElement.appendChild(cardElement);
         }
 
         //The transformerFactory and Transformer libraries are xml classes that help format the naturally messy structure of the code
@@ -72,9 +85,7 @@ class Main {
 
         //Writes the byten values to the file using the fileOutputStream
         fileOutputStream.write(contentsInBytes);
-        fileOutputStream.flush();
-        //Closes the writer
-        fileOutputStream.close();
+        
 
         //Shows user file reading is finished
         System.out.println("Done");
@@ -84,19 +95,18 @@ class Main {
         e.printStackTrace();
         //Finally statement that will always run after the try statement
     } finally {
-        try {
+        /*try {
             if (fileOutputStream != null){
                 fileOutputStream.close();
             } 
             }catch(IOException e){
                 e.printStackTrace();
-        }
+        }*/
         
     }
     //End of boring xml stuff
 
-        //Deck deck = new Deck();
-        Card card = new Card(0);
+        
         DrawCard draw = new DrawCard();
         Shuffle shuffle = new Shuffle();
         
@@ -107,7 +117,6 @@ class Main {
                        27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51};
         
 
-        //System.out.println(deck.ShowDeck());
        
         //System.out.println(card.Face() + " of " + card.Suit());
 
@@ -122,13 +131,20 @@ class Main {
         //It will assign the output variable the String that is returned...
 
         //This method will take a value from an array that 
-        output = draw.Draw(cards[0]);
+        output = draw.Draw(cards[0], handElement);
+
+
+        
+
+
+
+        
 
         
         //...And that will be outputed here.
         System.out.println(output);
         for(int i = 0; i < 52; i++){
-        System.out.println(cards[i]);
+        //System.out.println(cards[i]);
         }
 
 
@@ -143,7 +159,7 @@ class Main {
        */
        
 
-       //Delete code here at the end?
+       //Delete file here at the end?
     }
     
 }

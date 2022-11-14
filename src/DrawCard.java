@@ -8,14 +8,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 class DrawCard{
-    Card[] hand;
+
+    //Card[] hand;
+
 
     public DrawCard(){
         
 
         
     }
-    public String Draw(int cardIndex) throws Exception{
+    public String Draw(int cardIndex, Element handElement) throws Exception{
         String FILENAME = "Card_File.xml";
         
         DocumentBuilderFactory docB = DocumentBuilderFactory.newInstance();
@@ -31,6 +33,8 @@ class DrawCard{
                     //**This is the most important part as this is how we are assigning variables values from the file**
                     String Face = element.getElementsByTagName("Face").item(0).getTextContent();
                     String Suit = element.getElementsByTagName("Suit").item(0).getTextContent();
+
+                    
                 
 
         return Face + " of " + Suit;
