@@ -13,9 +13,12 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 //Nov 10th: Code is being a bitch
-//Nov 11th:
+//Nov 13th: Right now best option is probably to delete the file in full and rewrite it every time an edit is made to the xml file
+//          Will talk with mct on Monday though
 import java.util.Scanner;
 class Main {
     
@@ -59,9 +62,9 @@ class Main {
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(document);
 
-        //This code uses the transformer objects to implement the formatting/indenting
+        //This code uses the transformer to implement the formatting/indenting
         StreamResult result = new StreamResult(new StringWriter());
-        //This "yes" value is essentially a boolean that will decide whether to indent the code or not
+        //This "yes" value is essentially a boolean that will decide whether to format the code or not
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         //Number value ("5") determines the amount by which it will indent
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "5");
@@ -69,10 +72,10 @@ class Main {
 
         FileOutputStream fileOutputStream = null;
         File file;
-
-        try{
-        //Creates the aliens text file
         file = new File(FILENAME);
+        
+        try{
+        
         fileOutputStream = new FileOutputStream(file);
 
         if(!file.exists()){
@@ -87,21 +90,21 @@ class Main {
         fileOutputStream.write(contentsInBytes);
         
 
-        //Shows user file reading is finished
+        //Shows user file writing is finished
         System.out.println("Done");
 
       //Catch statement  
     } catch (IOException e){
         e.printStackTrace();
-        //Finally statement that will always run after the try statement
+        //Finally statement that will always run after the try statement to close the FileOutputStream
     } finally {
-        /*try {
+        try {
             if (fileOutputStream != null){
                 fileOutputStream.close();
             } 
             }catch(IOException e){
                 e.printStackTrace();
-        }*/
+        }
         
     }
     //End of boring xml stuff
@@ -133,31 +136,83 @@ class Main {
         //This method will take a value from an array that 
         output = draw.Draw(cards[0], handElement);
 
-
-        
-
-
-
-        
-
-        
-        //...And that will be outputed here.
         System.out.println(output);
-        for(int i = 0; i < 52; i++){
-        //System.out.println(cards[i]);
-        }
+        
 
 
+            
+        
+            //Code to access the xml file to take a value from the Deck node and copy it into our hand node.
+            DocumentBuilderFactory docB = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = docB.newDocumentBuilder();
+            Document doc = db.parse(new File(FILENAME));
+            NodeList card = doc.getElementsByTagName("Card" + cards[0]);
+            Node node = card.item(0);
+            Element element = (Element) node;
 
+            Element cardElement = document.createElement("Card1");
 
-/****** 
-        System.out.println("Do you want to draw cards?");
-        yn = input.nextLine();
-        if(yn.charAt(0) == 'y'){
-            DrawCards();
-        }
-       */
-       
+            Element suit = document.createElement("Suit");
+            suit.appendChild(document.createTextNode(element.getElementsByTagName("Suit").item(0).getTextContent()));
+
+            Element face = document.createElement("Face");
+            face.appendChild(document.createTextNode(element.getElementsByTagName("Face").item(0).getTextContent()));
+
+            cardElement.appendChild(suit);
+            cardElement.appendChild(face);
+
+            handElement.appendChild(cardElement);
+            //End of creating the new Nodes for the hand
+
+            //The transformerFactory and Transformer libraries are xml classes that help format the naturally messy structure of the code
+            TransformerFactory transformerFactory2 = TransformerFactory.newInstance();
+            Transformer transformer2 = transformerFactory2.newTransformer();
+            StreamResult result2 = new StreamResult(new StringWriter());
+            //This "yes" value is essentially a boolean that will decide whether to format the code or not
+            transformer2.setOutputProperty(OutputKeys.INDENT, "yes");
+            //Number value ("5") determines the amount by which it will indent
+            transformer2.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "5");
+            transformer2.transform(source, result2);
+
+            if(file.delete()){
+                System.out.println("Re-writing file....");
+            } else {
+                System.out.println("File Deletion ERROR");
+            }
+            FileOutputStream fileOutputStream2 = null;
+            try{
+        
+                fileOutputStream2 = new FileOutputStream(file);
+        
+                if(!file.exists()){
+                    file.createNewFile();
+                }
+                //Creates the output variable and 
+                String xmlString = result2.getWriter().toString();
+                //Creats an array of bytes to store the data that will be written to the file
+                byte[] contentsInBytes = xmlString.getBytes();
+        
+                //Writes the byten values to the file using the fileOutputStream
+                fileOutputStream2.write(contentsInBytes);
+                
+        
+                //Shows user file reading is finished
+                System.out.println("Done");
+        
+              //Catch statement  
+            } catch (IOException e){
+                e.printStackTrace();
+                //Finally statement that will always run after the try statement to close the FileOutputStream
+            } finally {
+                try {
+                    if (fileOutputStream2 != null){
+                        fileOutputStream2.close();
+                    } 
+                    }catch(IOException e){
+                        e.printStackTrace();
+                }  
+            }
+
 
        //Delete file here at the end?
     }
