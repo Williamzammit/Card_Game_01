@@ -22,30 +22,52 @@ import org.w3c.dom.NodeList;
 
 import java.util.Scanner;
 
-/*Nov 10th: Code is being a bitch
+/*
 //Nov 12th: Right now best option is probably to delete the file in full and rewrite it every time an edit is made to the xml file
             Will talk with mct on Monday though
 //Nov 13th: I have decided to use the method on deleting the file and it seems to work nicely even if there is a better way to do it
             Next steps are to draw multiple cards, include an option asking the user to save their hand at the end of the program(deleting the file)
             and an option at the beginning asking if the user would like to load the most recent hand (i.e. not re-writing a new file)
+//Nov 14th: After some review of the rubric made in class it would seem that I do meet the requirements for level 4 (not including the diagram)
+            so my next focus will be finishing the diagram to ensure a level 4, I also have the shuffle method which is not required for my grade
+            which should hopefully warrent a 100%
+            Only big issue is that my main method is kind of a disaster but some commmenting should make it easier for Mct to read through
 */
 
 class Main {
     
     public static void main(String[] args) throws Exception {
         Window test = new Window();
-        test.test();
-        
 
-        //Boring xml stuff
+        Scanner input = new Scanner(System.in);
 
-        //When changing the FILENAME variable you must also change the matching variable in DrawCard.java
+        int lazyVariable = 0;
         String FILENAME = "Card_File.xml";
+        File file;
+
+
+        file = new File(FILENAME);
+
+        if (file.exists()){
+            System.out.println("Would you like to load the most recent hand?");
+            String SD = input.nextLine();
+                if(Character.toLowerCase(SD.charAt(0)) == 'y'){
+                    System.out.println("File Loaded.");
+                } else if (Character.toLowerCase(SD.charAt(0)) == 'n'){
+                    lazyVariable = 1;
+                }
+            } else {
+                lazyVariable = 1;
+            }
+        
+        FileOutputStream fileOutputStream = null;
         String root = "Cards";
 
+        
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
+        DOMSource source = new DOMSource(document);
         Element rootElement = document.createElement(root);
         document.appendChild(rootElement);
 
@@ -55,6 +77,7 @@ class Main {
         Element handElement = document.createElement("Hand");
         rootElement.appendChild(handElement);
 
+        if (lazyVariable == 1){
         for(int i = 0; i <= 51; i++){
             Card card = new Card(i);
             Element cardElement = document.createElement("Card" + i);
@@ -73,7 +96,7 @@ class Main {
         //The transformerFactory and Transformer libraries are xml classes that help format the naturally messy structure of the code
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
-        DOMSource source = new DOMSource(document);
+        
 
         //This code uses the transformer to implement the formatting/indenting
         StreamResult result = new StreamResult(new StringWriter());
@@ -83,9 +106,7 @@ class Main {
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "5");
         transformer.transform(source, result);
 
-        FileOutputStream fileOutputStream = null;
-        File file;
-        file = new File(FILENAME);
+        
         
         try{
         
@@ -120,39 +141,28 @@ class Main {
         }
         
     }
-    //End of boring xml stuff
-
+}
+    
+        //End of boring xml stuff
         
-        DrawCard draw = new DrawCard();
-        Shuffle shuffle = new Shuffle();
+        Deck myDeck = new Deck();
+        //System.out.println(myDeck.showDeck());
         
         //Scanner input = new Scanner(System.in);
         //String yn;
         String output;
-        int[] cards = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 
-                       27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51};
-        
-
-       
-        //System.out.println(card.Face() + " of " + card.Suit());
-
-
-        /*This is our shuffle method, it takes the array above and randomly changes 
-          the order around so that there will be a different card at the "top" of the deck each time
-        */
-        cards = shuffle.ShuffleCards(cards);
-
-
+        int[] cards = {};      
+        cards = myDeck.ShuffleCards();
+        Card draw = new Card(cards[0]);
+    
         //Call draw Card method here, pass a value of what card it should draw.
         //It will assign the output variable the String that is returned...
 
-        //This method will take a value from an array that 
-        output = draw.Draw(cards[0], handElement);
-
+        //This method will take a value from an array that
+        output = draw.Draw(cards[0]);
+        test.test(cards[0]);
         System.out.println(output);
         
-
-
             //Code to access the xml file to take a value from the Deck node and copy it into our hand node.
             DocumentBuilderFactory docB = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = docB.newDocumentBuilder();
@@ -175,6 +185,7 @@ class Main {
             handElement.appendChild(cardElement);
             //End of creating the new Nodes for the hand
 
+            if(lazyVariable == 1){
             //The transformerFactory and Transformer libraries are xml classes that help format the naturally messy structure of the code
             TransformerFactory transformerFactory2 = TransformerFactory.newInstance();
             Transformer transformer2 = transformerFactory2.newTransformer();
@@ -192,9 +203,8 @@ class Main {
             }
             FileOutputStream fileOutputStream2 = null;
             try{
-        
                 fileOutputStream2 = new FileOutputStream(file);
-        
+
                 if(!file.exists()){
                     file.createNewFile();
                 }
@@ -202,18 +212,15 @@ class Main {
                 String xmlString = result2.getWriter().toString();
                 //Creats an array of bytes to store the data that will be written to the file
                 byte[] contentsInBytes = xmlString.getBytes();
-        
                 //Writes the byten values to the file using the fileOutputStream
                 fileOutputStream2.write(contentsInBytes);
-                
-        
-                //Shows user file reading is finished
+                //Shows user file writing is finished
                 System.out.println("Done");
         
               //Catch statement  
             } catch (IOException e){
                 e.printStackTrace();
-                //Finally statement that will always run after the try statement to close the FileOutputStream
+            //Finally statement that will always run after the try statement to ensure FileOutputStream is closed
             } finally {
                 try {
                     if (fileOutputStream2 != null){
@@ -223,9 +230,29 @@ class Main {
                         e.printStackTrace();
                 }  
             }
+        }
 
-
-       //Delete file here at the end?
+       //Ask user if they want to delete file or save hand
+        delete(input, file);
     }
-    
+
+
+    public static void delete(Scanner input, File file){
+        System.out.println("Would you like to save this hand? (y, n)");
+            String YN = input.nextLine();
+            input.close();
+            if(Character.toLowerCase(YN.charAt(0)) == 'y'){
+                System.out.println("File Saved.");
+                System.out.println("When launching the program again remember to load the most recent hand to view this hand again");
+            }
+            else if (Character.toLowerCase(YN.charAt(0)) == 'n'){
+                System.out.println("Deleting File...");
+                try{
+                    file.delete();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+                System.out.println("File Deleted");
+            }
+    }
 }
