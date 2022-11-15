@@ -37,20 +37,53 @@ import java.util.Scanner;
 class Main {
     
     public static void main(String[] args) throws Exception {
-        Window test = new Window();
 
+//Beginning of variable declaring
+        Window window = new Window();
+        Deck myDeck = new Deck();
         Scanner input = new Scanner(System.in);
+        int lazyVariable;
+        String root;
+        String output;
+        int[] cards = {};
+        String SD;
 
-        int lazyVariable = 0;
-        String FILENAME = "Card_File.xml";
+//Variables for the xml file
+        String FILENAME;
         File file;
+        FileOutputStream fileOutputStream;
+        DocumentBuilderFactory documentBuilderFactory;
+        DocumentBuilder documentBuilder;
+        Document document;
+        DOMSource source;
+        Element rootElement;
+        Element deckElement;
+        Element handElement;
+        Element cardElement;
+        Element suit;
+        Element face;
+        TransformerFactory transformerFactory;
+        Transformer transformer;
+        StreamResult result;
+        String xmlString;
+        byte[] contentsInBytes;
+        Element element;
+        TransformerFactory transformerFactory2;
+        Transformer transformer2;
+        StreamResult result2;
+        FileOutputStream fileOutputStream2;
+//End of variable declaring
 
 
+        lazyVariable = 0;
+        FILENAME = "Card_File.xml";
         file = new File(FILENAME);
 
+//Asks if the user wants to load the most recent hand which will keep the xml file the same as it was the last time the program was ran
+//Only asks this if the file exists
         if (file.exists()){
             System.out.println("Would you like to load the most recent hand?");
-            String SD = input.nextLine();
+            SD = input.nextLine();
                 if(Character.toLowerCase(SD.charAt(0)) == 'y'){
                     System.out.println("File Loaded.");
                 } else if (Character.toLowerCase(SD.charAt(0)) == 'n'){
@@ -60,46 +93,48 @@ class Main {
                 lazyVariable = 1;
             }
         
-        FileOutputStream fileOutputStream = null;
-        String root = "Cards";
+        fileOutputStream = null;
+        root = "Cards";
 
-        
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.newDocument();
-        DOMSource source = new DOMSource(document);
-        Element rootElement = document.createElement(root);
+//Nodes for the deck are created here using the Enums from Card.java
+        documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        document = documentBuilder.newDocument();
+        source = new DOMSource(document);
+        rootElement = document.createElement(root);
         document.appendChild(rootElement);
 
-        Element deckElement = document.createElement("Deck");
+        deckElement = document.createElement("Deck");
         rootElement.appendChild(deckElement);
 
-        Element handElement = document.createElement("Hand");
+        handElement = document.createElement("Hand");
         rootElement.appendChild(handElement);
 
-        if (lazyVariable == 1){
+    //Creates the Suit and Face nodes
+        if(lazyVariable == 1){
         for(int i = 0; i <= 51; i++){
             Card card = new Card(i);
-            Element cardElement = document.createElement("Card" + i);
+            cardElement = document.createElement("Card" + i);
 
-            Element suit = document.createElement("Suit");
+            suit = document.createElement("Suit");
             suit.appendChild(document.createTextNode(card.Suit()));
             cardElement.appendChild(suit);
 
-            Element face = document.createElement("Face");
+            face = document.createElement("Face");
             face.appendChild(document.createTextNode(card.Face()));
             cardElement.appendChild(face);
 
             deckElement.appendChild(cardElement);
         }
 
+//Transformer code that formats it for easier reading
         //The transformerFactory and Transformer libraries are xml classes that help format the naturally messy structure of the code
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
+        transformerFactory = TransformerFactory.newInstance();
+        transformer = transformerFactory.newTransformer();
         
 
         //This code uses the transformer to implement the formatting/indenting
-        StreamResult result = new StreamResult(new StringWriter());
+        result = new StreamResult(new StringWriter());
         //This "yes" value is essentially a boolean that will decide whether to format the code or not
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         //Number value ("5") determines the amount by which it will indent
@@ -107,7 +142,7 @@ class Main {
         transformer.transform(source, result);
 
         
-        
+//
         try{
         
         fileOutputStream = new FileOutputStream(file);
@@ -116,18 +151,17 @@ class Main {
             file.createNewFile();
         }
         //Creates the output variable and 
-        String xmlString = result.getWriter().toString();
+        xmlString = result.getWriter().toString();
         //Creats an array of bytes to store the data that will be written to the file
-        byte[] contentsInBytes = xmlString.getBytes();
+        contentsInBytes = xmlString.getBytes();
 
         //Writes the byten values to the file using the fileOutputStream
         fileOutputStream.write(contentsInBytes);
-        
 
         //Shows user file writing is finished
         System.out.println("Done");
 
-      //Catch statement  
+      //Catch statement for ERRORS
     } catch (IOException e){
         e.printStackTrace();
         //Finally statement that will always run after the try statement to close the FileOutputStream
@@ -135,48 +169,41 @@ class Main {
         try {
             if (fileOutputStream != null){
                 fileOutputStream.close();
-            } 
+            }
             }catch(IOException e){
                 e.printStackTrace();
         }
         
     }
-}
-    
-        //End of boring xml stuff
-        
-        Deck myDeck = new Deck();
+}        
+        //This commented line prints out the entire deck to the terminal, already tested
         //System.out.println(myDeck.showDeck());
-        
-        //Scanner input = new Scanner(System.in);
-        //String yn;
-        String output;
-        int[] cards = {};      
+           
         cards = myDeck.ShuffleCards();
         Card draw = new Card(cards[0]);
     
         //Call draw Card method here, pass a value of what card it should draw.
         //It will assign the output variable the String that is returned...
 
-        //This method will take a value from an array that
+        //This method will take a value from the shuffled array and run the Draw method in Card.java
         output = draw.Draw(cards[0]);
-        test.test(cards[0]);
+        //Runs the code to output the card onto a seperate window, wanted to practice using the window for future units
+        window.test(cards[0]);
+        //Prints out the selected card, used this to test if my Window code was accurate
         System.out.println(output);
         
             //Code to access the xml file to take a value from the Deck node and copy it into our hand node.
-            DocumentBuilderFactory docB = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = docB.newDocumentBuilder();
-            Document doc = db.parse(new File(FILENAME));
+            Document doc = documentBuilder.parse(new File(FILENAME));
             NodeList card = doc.getElementsByTagName("Card" + cards[0]);
             Node node = card.item(0);
-            Element element = (Element) node;
+            element = (Element) node;
 
-            Element cardElement = document.createElement("Card1");
+            cardElement = document.createElement("Card1");
 
-            Element suit = document.createElement("Suit");
+            suit = document.createElement("Suit");
             suit.appendChild(document.createTextNode(element.getElementsByTagName("Suit").item(0).getTextContent()));
 
-            Element face = document.createElement("Face");
+            face = document.createElement("Face");
             face.appendChild(document.createTextNode(element.getElementsByTagName("Face").item(0).getTextContent()));
 
             cardElement.appendChild(suit);
@@ -187,9 +214,9 @@ class Main {
 
             if(lazyVariable == 1){
             //The transformerFactory and Transformer libraries are xml classes that help format the naturally messy structure of the code
-            TransformerFactory transformerFactory2 = TransformerFactory.newInstance();
-            Transformer transformer2 = transformerFactory2.newTransformer();
-            StreamResult result2 = new StreamResult(new StringWriter());
+            transformerFactory2 = TransformerFactory.newInstance();
+            transformer2 = transformerFactory2.newTransformer();
+            result2 = new StreamResult(new StringWriter());
             //This "yes" value is essentially a boolean that will decide whether to format the code or not
             transformer2.setOutputProperty(OutputKeys.INDENT, "yes");
             //Number value ("5") determines the amount by which it will indent
@@ -201,7 +228,7 @@ class Main {
             } else {
                 System.out.println("File Deletion ERROR");
             }
-            FileOutputStream fileOutputStream2 = null;
+            fileOutputStream2 = null;
             try{
                 fileOutputStream2 = new FileOutputStream(file);
 
@@ -209,9 +236,9 @@ class Main {
                     file.createNewFile();
                 }
                 //Creates the output variable and 
-                String xmlString = result2.getWriter().toString();
+                xmlString = result2.getWriter().toString();
                 //Creats an array of bytes to store the data that will be written to the file
-                byte[] contentsInBytes = xmlString.getBytes();
+                contentsInBytes = xmlString.getBytes();
                 //Writes the byten values to the file using the fileOutputStream
                 fileOutputStream2.write(contentsInBytes);
                 //Shows user file writing is finished
@@ -238,8 +265,10 @@ class Main {
 
 
     public static void delete(Scanner input, File file){
+        String YN;
+
         System.out.println("Would you like to save this hand? (y, n)");
-            String YN = input.nextLine();
+            YN = input.nextLine();
             input.close();
             if(Character.toLowerCase(YN.charAt(0)) == 'y'){
                 System.out.println("File Saved.");
