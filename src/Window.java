@@ -24,99 +24,99 @@ public String getCardImage(int cardNumber){
         case 4:
         return "🃕";
         case 5:
-        return "";
+        return "🃖";
         case 6:
-        return "";
+        return "🃗";
         case 7:
-        return "";
+        return "🃘";
         case 8:
-        return "";
+        return "🃙";
         case 9:
-        return "";
+        return "🃚";
         case 10:
-        return "";
+        return "🃛";
         case 11:
-        return "";
+        return "🃝";
         case 12:
-        return "";
+        return "🃞";
         case 13:
-        return "";
+        return "🃁";
         case 14:
-        return "";
+        return "🃂";
         case 15:
-        return "";
+        return "🃃";
         case 16:
-        return "";
+        return "🃄";
         case 17:
-        return "";
+        return "🃅";
         case 18:
-        return "";
+        return "🃆";
         case 19:
-        return "";
+        return "🃇";
         case 20:
-        return "";
+        return "🃈";
         case 21:
-        return "";
+        return "🃉";
         case 22:
-        return "";
+        return "🃊";
         case 23:
-        return "";
+        return "🃋";
         case 24:
-        return "";
+        return "🃍";
         case 25:
-        return "";
+        return "🃎";
         case 26:
-        return "";
+        return "🂱";
         case 27:
-        return "";
+        return "🂲";
         case 28:
-        return "";
+        return "🂳";
         case 29:
-        return "";
+        return "🂴";
         case 30:
-        return "";
+        return "🂵";
         case 31:
-        return "";
+        return "🂶";
         case 32:
-        return "";
+        return "🂷";
         case 33:
-        return "";
+        return "🂸";
         case 34:
-        return "";
+        return "🂹";
         case 35:
-        return "";
+        return "🂺";
         case 36:
-        return "";
+        return "🂻";
         case 37:
-        return "";
+        return "🂽";
         case 38:
-        return "";
+        return "🂾";
         case 39:
-        return "";
+        return "🂡";
         case 40:
-        return "";
+        return "🂢";
         case 41:
-        return "";
+        return "🂣";
         case 42:
-        return "";
+        return "🂤";
         case 43:
-        return "";
+        return "🂥";
         case 44:
-        return "";
+        return "🂦";
         case 45:
-        return "";
+        return "🂧";
         case 46:
-        return "";
+        return "🂨";
         case 47:
-        return "";
+        return "🂩";
         case 48:
-        return "";
+        return "🂪";
         case 49:
-        return "";
+        return "🂫";
         case 50:
-        return "";
+        return "🂭";
         case 51:
-        return "";
+        return "🂮";
     }
     return "CARD ERROR";
 }
