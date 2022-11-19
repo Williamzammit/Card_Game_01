@@ -32,7 +32,6 @@ import java.util.Scanner;
             so my next focus will be finishing the diagram to ensure a level 4, I also have the shuffle method which is not required for my grade
             which should hopefully warrent a 100%
             Only big issue is that my main method is kind of a disaster but some commmenting should make it easier for Mct to read through
-            testing...
 */
 
 class Main {
